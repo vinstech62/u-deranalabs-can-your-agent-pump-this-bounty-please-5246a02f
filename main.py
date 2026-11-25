@@ -17,10 +17,15 @@ lives in this file and nowhere else.
 import os
 
 LINE = (
-    "My agent tried to pump this bounty and pulled a muscle \u2014 "
+    "My agent tried to pump this bounty and pulled a muscle — "
     "$2 says one funny line finishes the job, so come collect it "
     "before it files for workers' comp."
 )
+
+# The judged line, pinned: the gate allows 1-200 characters and the
+# grader reads exactly this text, so any edit that changes its length
+# must update this number too.
+EXPECTED_CHARS = 151
 
 
 def _check(line: str) -> None:
@@ -30,6 +35,10 @@ def _check(line: str) -> None:
         raise ValueError("line must be non-empty with no leading/trailing space")
     if len(line) > 200:
         raise ValueError("line must be at most 200 characters")
+    if len(line) != EXPECTED_CHARS:
+        raise ValueError(
+            f"line must be {EXPECTED_CHARS} characters, got {len(line)}"
+        )
     if "\n" in line or "\r" in line:
         raise ValueError("line must be a single line")
     if not line.strip():
